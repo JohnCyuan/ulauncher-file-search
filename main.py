@@ -14,6 +14,7 @@ from ulauncher.api.shared.action.OpenAction import OpenAction
 from ulauncher.api.shared.action.RunScriptAction import RunScriptAction
 from ulauncher.api.shared.action.DoNothingAction import DoNothingAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
+import ipdb
 
 LOGGING = logging.getLogger(__name__)
 
@@ -45,18 +46,17 @@ class FileSearchExtension(Extension):
 
         cmd.append(query)
         cmd.append(self.preferences['base_dir'])
-
         process = subprocess.Popen(cmd,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
 
         out, err = process.communicate()
-
+        #ipdb.set_trace()
         if err:
             self.logger.error(err)
             return []
 
-        files = out.split('\n')
+        files = out.decode("utf-8").split('\n')
         files = filter(None, files)  # remove empty lines
 
         result = []
@@ -98,7 +98,7 @@ class KeywordQueryEventListener(EventListener):
 
         query = event.get_argument()
 
-        if not query or len(query) < 3:
+        if not query or len(query) < 2:
             return RenderResultListAction([ExtensionResultItem(
                 icon='images/icon.png',
                 name='Keep typing your search criteria ...',
@@ -106,8 +106,8 @@ class KeywordQueryEventListener(EventListener):
 
         keyword = event.get_keyword()
         # Find the keyword id using the keyword (since the keyword can be changed by users)
-        for kwId, kw in extension.preferences.iteritems():
-            if kw == keyword:
+        for kwId, kw in extension.preferences.items():
+          if kw == keyword:
                 keywordId = kwId
 
         file_type = FILE_SEARCH_ALL
@@ -117,7 +117,6 @@ class KeywordQueryEventListener(EventListener):
             file_type = FILE_SEARCH_DIRECTORY
 
         results = extension.search(query.strip(), file_type)
-
         if not results:
             return RenderResultListAction([ExtensionResultItem(
                 icon='images/icon.png',
