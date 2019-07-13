@@ -3,7 +3,8 @@
 import logging
 import os
 import subprocess
-
+import ipdb
+import time
 from ulauncher.api.client.EventListener import EventListener
 # pylint: disable=import-error
 from ulauncher.api.client.Extension import Extension
@@ -35,17 +36,21 @@ class FileSearchExtension(Extension):
 
   def search(self, query, file_type=None, add_extension=False):
     """ Searches for Files using fd command """
-    cmd = ['timeout', '20s', 'ionice', '-c', '3', 'fd', '--hidden']
+    cmd = ['timeout', '15s', 'ionice', '-c', '3', 'fd', '--hidden']
     if file_type == FILE_SEARCH_FILE:
       cmd.append('-t')
       cmd.append('f')
-      if add_extension:
-        cmd.append('-e')
     elif file_type == FILE_SEARCH_DIRECTORY:
       cmd.append('-t')
       cmd.append('d')
 
-    cmd.append(query)
+    if add_extension:
+      cmd.append('-e')
+      index = query.rfind('.')
+      cmd.append(query[index + 1:])
+      cmd.append(query[:index])
+    else:
+      cmd.append(query)
     cmd.append(self.preferences['base_dir'])
     process = subprocess.Popen(cmd,
                                stdout=subprocess.PIPE,
@@ -91,14 +96,13 @@ class FileSearchExtension(Extension):
 
 class KeywordQueryEventListener(EventListener):
   """ Listener that handles the user input """
+  start_time = time.time()
 
   # pylint: disable=unused-argument,no-self-use
   def on_event(self, event, extension):
     """ Handles the event """
     items = []
-
     query = event.get_argument()
-
     if not query or len(query) < 2:
       return RenderResultListAction([ExtensionResultItem(
         icon='images/icon.png',
