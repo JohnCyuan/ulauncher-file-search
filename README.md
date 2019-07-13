@@ -12,7 +12,7 @@
 ## Requirements
 
 - Ulauncher
-- Python >= 2.7
+- Python >= 3
 - [fd](https://github.com/sharkdp/fd) - A simple, fast and user-friendly alternative to 'find'.
 
 ## Install

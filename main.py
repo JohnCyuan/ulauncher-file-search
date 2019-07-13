@@ -103,12 +103,12 @@ class KeywordQueryEventListener(EventListener):
     """ Handles the event """
     items = []
     query = event.get_argument()
+
     if not query or len(query) < 2:
       return RenderResultListAction([ExtensionResultItem(
         icon='images/icon.png',
         name='Keep typing your search criteria ...',
         on_enter=DoNothingAction())])
-
     keyword = event.get_keyword()
     # Find the keyword id using the keyword (since the keyword can be changed by users)
     for kwId, kw in extension.preferences.items():
