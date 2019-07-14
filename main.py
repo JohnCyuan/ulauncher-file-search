@@ -57,13 +57,13 @@ class FileSearchExtension(Extension):
             cmd.append(query)
         cmd.append(self.preferences['base_dir'])
         ignore_folder = self.preferences['ignore_folder']
-        ignore_folder_arr = ignore_folder.splint(';')
+        ignore_folder_arr = ignore_folder.split(';')
         for folder in ignore_folder_arr:
             cmd.append('-E')
             cmd.append(folder)
 
         ignore_file = self.preferences['ignore_file']
-        ignore_file_arr = ignore_file.splint(';')
+        ignore_file_arr = ignore_file.split(';')
         for file in ignore_file_arr:
             cmd.append('-E')
             cmd.append("'"+file+"'")
@@ -127,7 +127,6 @@ class FileSearchExtension(Extension):
 
 
 class KeywordQueryEventListener(EventListener):
-    """ Listener that handles the user input """
     start_time = time.time()
 
     # pylint: disable=unused-argument,no-self-use
