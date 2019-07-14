@@ -52,8 +52,15 @@
       "id": "ignore_folder",
       "type": "text",
       "name": "Ignore folder",
-      "description": "The base directory to start your searches. Ex: /",
+      "description": "Ignore",
       "default_value": "/tmp"
+    },
+     {
+      "id": "ignore_file",
+      "type": "text",
+      "name": "Ignore file",
+      "description": "The base directory to start your searches. Ex: /",
+      "default_value": "*.tmp"
     }
   ]
 }

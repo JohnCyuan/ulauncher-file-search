@@ -8,9 +8,7 @@ import time
 import gi
 import mimetypes
 
-gi.require_version('Gtk', '3.0')
 # pylint: disable=import-error
-from gi.repository import Gio, Gtk
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.client.Extension import Extension
 from ulauncher.api.shared.action.DoNothingAction import DoNothingAction
@@ -21,6 +19,9 @@ from ulauncher.api.shared.action.RunScriptAction import RunScriptAction
 from ulauncher.api.shared.event import KeywordQueryEvent
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.api.shared.item.ExtensionSmallResultItem import ExtensionSmallResultItem
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gio, Gtk
 
 LOGGING = logging.getLogger(__name__)
 
@@ -55,6 +56,18 @@ class FileSearchExtension(Extension):
         else:
             cmd.append(query)
         cmd.append(self.preferences['base_dir'])
+        ignore_folder = self.preferences['ignore_folder']
+        ignore_folder_arr = ignore_folder.splint(';')
+        for folder in ignore_folder_arr:
+            cmd.append('-E')
+            cmd.append(folder)
+
+        ignore_file = self.preferences['ignore_file']
+        ignore_file_arr = ignore_file.splint(';')
+        for file in ignore_file_arr:
+            cmd.append('-E')
+            cmd.append("'"+file+"'")
+
         process = subprocess.Popen(cmd,
                                    stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
@@ -150,7 +163,7 @@ class KeywordQueryEventListener(EventListener):
                 on_enter=HideWindowAction())])
 
         items = []
-        for result in results[:15]:
+        for result in results[:16]:
             items.append(ExtensionSmallResultItem(
                 icon=result['icon'],
                 name=result['path'],
@@ -160,8 +173,6 @@ class KeywordQueryEventListener(EventListener):
             ))
 
         return RenderResultListAction(items)
-
-
 
 
 if __name__ == '__main__':

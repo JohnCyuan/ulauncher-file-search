@@ -1,19 +1,15 @@
 # ulauncher-file-search
 
-[![Build Status](https://img.shields.io/travis/com/brpaz/ulauncher-file-search.svg)](https://github.com/brpaz/ulauncher-file-search)
-[![GitHub license](https://img.shields.io/github/license/brpaz/ulauncher-fd.svg)](https://github.com/brpaz/:ulauncher-file-search/blob/master/LICENSE)
 
 > Quick Search files and directories from [Ulauncher](https://ulauncher.io) using [https://github.com/sharkdp/fd](fd).
 
 ## Demo
 
-![demo](demo.gif)
 
 ## Requirements
 
 - Ulauncher
 - Python >= 3
-- [fd](https://github.com/sharkdp/fd) - A simple, fast and user-friendly alternative to 'find'.
 
 ## Install
 
